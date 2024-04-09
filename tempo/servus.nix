@@ -1,12 +1,12 @@
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.stdenv.mkDerivation {
-    name = "servus";
-    src = ./src;
+    pname = "servus";
+    version = "0.0.5";
+    src = ./.;
 
     buildPhase = ''
-       cd src
-       gcc -o servus servus.cpp
+       gcc -fopenmp -o servus servus.cpp
        '';
 
     installPhase = ''
