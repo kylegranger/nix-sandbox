@@ -4,5 +4,5 @@ let
   pkgs = import nixpkgs { config = {}; overlays = []; };
 in
 {
-  servus = pkgs.callPackage ./servus.nix { };
+  servus2 = pkgs.callPackage ./servus2.nix { };
 }

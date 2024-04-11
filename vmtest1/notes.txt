@@ -1,8 +1,63 @@
-nix-build '<nixpkgs/nixos>' -A vm \
+rm nixos.qcow2 && rm -r result && nix-build '<nixpkgs/nixos>' -A vm \
 -I nixpkgs=channel:nixos-23.11 \
--I nixos-config=./configuration.nix
+-I nixos-config=./test.nix
 
 ls -R ./result
 
 
 QEMU_KERNEL_PARAMS=console=ttyS0 ./result/bin/run-nixos-vm -nographic; reset
+
+/nix/store/bgq217ldng4fz6y6l8zy0jnb9bv6g0m0-servus-0.0.5/bin/servus aaa 222 threeee
+
+  systemd.services.foo.enable = true;
+
+
+// shutdown running vm
+sudo pkill qemu
+
+
+//
+// DISK MAKING
+//
+
+  system.build.qcow = import <nixpkgs/nixos/lib/make-disk-image.nix> {
+    inherit lib config pkgs;
+    diskSize = 10240
+    format = "qcow2";
+  };
+
+nix-build '<nixpkgs/nixos>' - <<'EOF'
+(import <nixpkgs/nixos/lib/make-disk-image.nix> {
+    inherit lib config;
+    pkgs = import <nixpkgs> { inherit (pkgs) system; };
+    diskSize = 10240;
+    format = "qcow2";
+}).system.build.qcow2
+EOF
+
+nix-build '<nixpkgs/nixos>' - <<'EOF'
+let pkgs = import <nixpkgs> {}; in
+(import <nixpkgs/nixos/lib/make-disk-image.nix> {
+    inherit (pkgs) lib config;
+    pkgs = import <nixpkgs> { inherit (pkgs) system; };
+    diskSize = 10240;
+    format = "qcow2";
+}).system.build.qcow2
+EOF
+
+QEMU_KERNEL_PARAMS=console=ttyS0 ./result/bin/run-nixos-vm2 -nographic; reset
+
+export TMPDIR=/home/ader/dev/eiger/nix/nix-sandbox/vmtest1/tempo && export USE_TMPDIR=1
+
+      /nix/store/3phcm8154pjmm7y9kj8qrmfpp9z2aa76-servus2-0.0.5/bin/servus2 ./workspace/joyce.txt ./workspace/proof.json > /tmp/xchg/servus2.log
+      poweroff
+/nix/store/3phcm8154pjmm7y9kj8qrmfpp9z2aa76-servus2-0.0.5/bin/servus2 /xchg/joyce.txt /xchg/proof.json
+
+/nix/store/3phcm8154pjmm7y9kj8qrmfpp9z2aa76-servus2-0.0.5/bin/servus2 /workspace/joyce.txt /workspace/proof.json
+
+export TMPDIR=/home/ader/dev/eiger/nix/nix-sandbox/vmtest1/workspace && export USE_TMPDIR=1
+
+/nix/store/x9pjl3vh8g7brpnxmxjd071bk6psxqmb-servus2-0.0.5/bin/servus2 /tmp/xchg/witness.json /tmp/xchg/proof.json >> /tmp/xchg/servus2.log
+
+
+export TMPDIR=/home/ader/dev/eiger/nix/nix-sandbox/vmtest1/workspace && export USE_TMPDIR=1

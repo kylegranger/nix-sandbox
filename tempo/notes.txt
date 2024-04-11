@@ -1,0 +1,14 @@
+g++ -fopenmp -o servus2 servus2.cpp
+
+nix-build -A servus2
+
+/nix/store/4jp23009vky0avdhsi4y3n3k247am5qd-servus2-0.0.5/bin/servus2 ./workspace/joyce.txt /workspace/proof.json
+/nix/store/yx662ryh3p6jpdb433w6bhj8cdipcfqz-servus2-0.0.5/bin/servus2 ./workspace/joyce.txt ./workspace/proof.json
+
+
+/nix/store/3phcm8154pjmm7y9kj8qrmfpp9z2aa76-servus2-0.0.5
+
+    -virtfs local,path=./workspace,security_model=none,mount_tag=workspace \
+
+/nix/store/x9pjl3vh8g7brpnxmxjd071bk6psxqmb-servus2-0.0.5/bin/servus2 /tmp/xchg/joyce.txt /tmp/xchg/proof.json >> /tmp/xchg/asdf4.txt
+
