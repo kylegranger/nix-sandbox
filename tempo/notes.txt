@@ -12,3 +12,27 @@ nix-build -A servus2
 
 /nix/store/x9pjl3vh8g7brpnxmxjd071bk6psxqmb-servus2-0.0.5/bin/servus2 /tmp/xchg/joyce.txt /tmp/xchg/proof.json >> /tmp/xchg/asdf4.txt
 
+
+nix-build --out-link vm - <<'EOF'
+{ nixpkgs ? <nixpkgs>, system ? "x86_64-linux", pkgs ? import <nixpkgs/nixos> {}, ... }:
+let
+  myisoconfig = { pkgs, lib, ... }: with lib; with pkgs; {
+    imports = [
+      "${nixpkgs}/nixos/modules/profiles/qemu-guest.nix"
+      "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+    ];
+  };
+  
+  evalNixos = config: import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
+    inherit (pkgs) lib pkgs config;
+    diskSize = 8192;
+    format = "qcow2";
+    configFile = pkgs.writeText "configuration.nix"
+      ''
+        {
+          # TODO Write text of myisoconfig above here as file
+        }
+      '';
+  };
+in { vm = (evalNixos myisoconfig).config.system.build.qcow; }
+EOF
