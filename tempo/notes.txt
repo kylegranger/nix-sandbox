@@ -1,0 +1,38 @@
+g++ -fopenmp -o servus2 servus2.cpp
+
+nix-build -A servus2
+
+/nix/store/4jp23009vky0avdhsi4y3n3k247am5qd-servus2-0.0.5/bin/servus2 ./workspace/joyce.txt /workspace/proof.json
+/nix/store/yx662ryh3p6jpdb433w6bhj8cdipcfqz-servus2-0.0.5/bin/servus2 ./workspace/joyce.txt ./workspace/proof.json
+
+
+/nix/store/3phcm8154pjmm7y9kj8qrmfpp9z2aa76-servus2-0.0.5
+
+    -virtfs local,path=./workspace,security_model=none,mount_tag=workspace \
+
+/nix/store/x9pjl3vh8g7brpnxmxjd071bk6psxqmb-servus2-0.0.5/bin/servus2 /tmp/xchg/joyce.txt /tmp/xchg/proof.json >> /tmp/xchg/asdf4.txt
+
+
+nix-build --out-link vm - <<'EOF'
+{ nixpkgs ? <nixpkgs>, system ? "x86_64-linux", pkgs ? import <nixpkgs/nixos> {}, ... }:
+let
+  myisoconfig = { pkgs, lib, ... }: with lib; with pkgs; {
+    imports = [
+      "${nixpkgs}/nixos/modules/profiles/qemu-guest.nix"
+      "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+    ];
+  };
+  
+  evalNixos = config: import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
+    inherit (pkgs) lib pkgs config;
+    diskSize = 8192;
+    format = "qcow2";
+    configFile = pkgs.writeText "configuration.nix"
+      ''
+        {
+          # TODO Write text of myisoconfig above here as file
+        }
+      '';
+  };
+in { vm = (evalNixos myisoconfig).config.system.build.qcow; }
+EOF
